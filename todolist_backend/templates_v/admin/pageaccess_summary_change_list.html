@@ -1,0 +1,52 @@
+
+{% extends "admin/change_list.html" %}
+{% load humanize %}
+
+{% block content_title %}
+    <h1> Sales Summary a </h1>
+{% endblock %}
+<div class="card card-body border-0 shadow table-wrapper table-responsive">
+{% block result_list %}
+  페이지 방문수 <br>
+
+    <div class=”results”>
+        <table class="table table-hover">
+            
+        <thead>
+          <tr style=”font-weight:bold; border-top:2px solid #DDDDDD;”>
+            <th>
+              <div class=”text”>
+                <a href=”#”>페이지</a>
+              </div>
+            </th>
+            <th>
+              <div class=”text”>
+                <a href=”#”>Hits</a>
+              </div>
+            </th>
+            
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in summary %}
+          <tr class=”{% cycle 'row1' 'row2' %}”>
+            <td> {{ row.page_title }} </td>
+            <td> {{ row.total | intcomma }} </td>
+            {% comment %} <td> {{ row.total_sales | default:0 | intcomma }}$ </td> {% endcomment %}
+            <td>
+              <strong>
+              {% comment %} {{ row.total_sales | 
+                  default:0 | 
+                  percentof:summary_total.total_sales }}  {% endcomment %}
+              </strong>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+        
+      </table>
+    </div>
+    
+{% endblock %}
+</div>
+{% block pagination %}{% endblock %}

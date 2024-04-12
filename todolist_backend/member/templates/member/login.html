@@ -1,0 +1,23 @@
+{% extends 'home/index.html' %}
+
+{% block contents %}
+<div>로그인 페이지!</div>
+<form action="{% url 'member:login' %}" method="post">
+    {% csrf_token %}
+    {% for form in forms %}
+    <div>
+        <label for ="{{ form.id_for_label }}">{{ form.label }} </label>
+        {{ form }}
+    {% endfor %}
+    </div>
+    <div>
+    {% if error %}
+    {{ error }}
+    {% endif %}
+    </div>
+
+    <div>
+        <button type="submit" name="login-submit" value="login">로그인</button>
+    </div>
+</form>
+{% endblock contents %}

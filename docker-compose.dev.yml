@@ -1,0 +1,91 @@
+version: '3'
+
+services:
+  front:
+    build:
+      context: ./todolist-app
+      dockerfile: Dockerfile.dev
+    container_name: todolist-front
+    volumes:
+      - ./todolist_backend/static:/app/static
+      - ./todolist_backend/media:/app/media
+    ports:
+    - "9999:80"
+    expose:
+      - "9999"
+    restart : always
+    depends_on:
+      - back
+    entrypoint:
+      - /docker-entrypoint.production.sh
+
+  back:
+    build: ./todolist_backend
+    container_name: todolist-back
+    # command: python manage.py runserver 0.0.0.0:8000
+    command: gunicorn myname.wsgi:application -b 0.0.0.0:8000
+    # command: > 
+    #   bash -c "
+    #   python manage.py migrate   
+    #   && python manage.py collectstatic --noinput
+    #   && gunicorn myname.wsgi:application -b 0.0.0.0:8000 "
+    volumes:
+      - ./todolist_backend:/usr/src/app/:rw
+    ports:
+      - 8000:8000
+    env_file:
+      - ./.env.dev
+    depends_on:
+      - db
+    environment:
+      - DJANGO_DB_HOST=db
+  db:
+    image: postgres:15
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=myname
+      - POSTGRES_PASSWORD=myname00
+      - POSTGRES_DB=work_dev
+      # - POSTGRES_USER=hello_django
+      # - POSTGRES_PASSWORD=hello_django
+      # - POSTGRES_DB=hello_django_dev
+  db_data_exporter:
+    image: postgres:15
+    volumes:
+      - postgres_data:/var/lib/postgresql/data_export/
+    command: ["pg_dump", "-U", "myname", "-Fc", "work_dev"]
+ 
+  # frontweb:
+  #   build: ./myname_front_docker
+  #   ports:
+  #     - 8080:8080
+  #   volumes:
+  #     - ./myname_front_docker:/app:rw
+  #   depends_on:  
+  #     - web  
+
+
+
+
+# 작업완료후 공유하기 위한 단계
+# docker-compose run --rm db_data_exporter > myauction_dev_dump.pgdump
+# docker-compose build
+# docker login
+# docker tag your_project_web your_registry_username/your_repository_name:latest
+# docker push your_registry_username/your_repository_name:latest
+# myauction_dev_dump.pgdump 파일공유
+# 다른개발자는 
+# docker-compose down
+# docker-compose up -d db
+# cat myauction_dev_dump.pgdump | docker exec -i your_project_db_1 pg_restore -U myname -d myauction_dev
+
+# 다른개발자가 데이터 사용시.
+# docker-compose run --rm db_data_exporter > myauction_dev_dump.pgdump
+# docker-compose down
+# docker-compose up -d db
+# cat myauction_dev_dump.pgdump | docker exec -i your_project_db_1 pg_restore -U myname -d myauction_dev
+
+
+volumes:
+  postgres_data:

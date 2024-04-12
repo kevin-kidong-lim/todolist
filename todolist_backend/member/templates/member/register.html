@@ -1,0 +1,59 @@
+{% extends 'home/index.html' %}
+
+{% block contents %}
+<div>회원가입 페이지!</div>
+<form action="{% url 'member:register' %}" method="post">
+    {% csrf_token %}
+    {% for form in forms %}
+    <div>
+        <label for ="{{ form.id_for_label }}">{{ form.label }} </label>
+        {{ form }}
+    {% endfor %}
+    </div>
+    <div> Error For ;
+    {% for form in forms %}
+        {{ form.errors }}
+    {% endfor %}
+    </div>
+    <div> Error :
+    {% if error %}
+    {{ error }}
+    {% endif %}
+    </div>
+    {% comment %} <div>
+        <label for="user_id">회원ID</label>
+        <input type="text" id="user_id" placeholder="회원ID를 입력하세요." name="user_id">
+    </div>
+    <div>
+        <label for="user_nm">이름</label>
+        <input type="text" id="user_nm" placeholder="이름을 입력하세요." name="user_nm">
+    </div>
+    <div>
+        <label for="user_pw1">비밀번호</label>
+        <input type="text" id="user_pw1" placeholder="비밀번호를 입력하세요." name="user_pw1">
+    </div>
+    <div>
+        <label for="user_pw2">비밀번호 확인</label>
+        <input type="text" id="user_pw2" placeholder="비밀번호 확인을 입력하세요." name="user_pw2">
+    </div>
+    <div>
+        <label for="email">Email</label>
+        <input type="text" id="email" placeholder="Email을 입력하세요." name="email">
+    </div>
+    <div>
+        <label for="post_cd">우편번호</label>
+        <input type="text" id="post_cd" placeholder="우편번호를 입력하세요." name="post_cd">
+    </div>
+    <div>
+        <label for="address">주소1</label>
+        <input type="text" id="address" placeholder="주소1를 입력하세요." name="address">
+    </div>
+    <div>
+        <label for="address2">주소2</label>
+        <input type="text" id="address2" placeholder="주소2를 입력하세요." name="address2">
+    </div> {% endcomment %}
+    <div>
+        <button type="submit" name="register-submit" value="register">회원가입하기</button>
+    </div>
+</form>
+{% endblock contents %}
