@@ -2,7 +2,7 @@
   <div class="container">
     <div class="input-form-backgroud row">
       <div class="col-md-12 d-flex justify-content-between align-items-center">
-        <h1 class="d-inline-block mb-0">Dodo List</h1>
+        <h1 class="d-inline-block mb-0">Todo List</h1>
         <div class="mb-3 mt-3" style="display: flex; align-items: center;">
           <div class="user-initials" style="margin-right: 10px;">
             {{ getUserInitials(session_user_id) }}
